@@ -133,6 +133,7 @@ bool RM07::OnMessage(int messageTag, int controlTag, int dataSize, const void *p
       SendMidiMsgFromUI(msg);
     }
   }
+  return 0;
 }
 #endif
 
