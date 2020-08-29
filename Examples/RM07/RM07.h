@@ -29,22 +29,23 @@ using namespace igraphics;
 class RM07 : public Plugin
 {
 public:
-  RM07(const InstanceInfo& info);
+  RM07(const InstanceInfo &info);
 
 #if IPLUG_EDITOR // // http://bit.ly/2S64BDd
-  void OnMidiMsgUI(const IMidiMsg& msg) override;
+  void OnMidiMsgUI(const IMidiMsg &msg) override;
 #endif
-  
+
 #if IPLUG_DSP // http://bit.ly/2S64BDd
 public:
-  void GetBusName(ERoute direction, int busIdx, int nBuses, WDL_String& str) const override;
+  void GetBusName(ERoute direction, int busIdx, int nBuses, WDL_String &str) const override;
 
-  void ProcessBlock(sample** inputs, sample** outputs, int nFrames) override;
-  void ProcessMidiMsg(const IMidiMsg& msg) override;
+  void ProcessBlock(sample **inputs, sample **outputs, int nFrames) override;
+  void ProcessMidiMsg(const IMidiMsg &msg) override;
   void OnReset() override;
   void OnParamChange(int paramIdx) override;
-  bool GetMidiNoteText(int noteNumber, char* text) const override;
+  bool GetMidiNoteText(int noteNumber, char *text) const override;
   void OnIdle() override;
+
 private:
   DrumSynthDSP mDSP;
   IPeakSender<8> mSender;
