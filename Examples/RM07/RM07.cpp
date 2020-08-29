@@ -68,10 +68,12 @@ RM07::RM07(const InstanceInfo &info)
     pGraphics->LoadFont("Roboto-Regular", ROBOTO_FN);
     IRECT b = pGraphics->GetBounds().GetPadded(-5);
     const IRECT buttons = b.ReduceFromTop(50.f);
+    const IRECT volumeContainer = b.ReduceFromTop(80.f);
     const IRECT pads = b.GetPadded(-5.f);
 
     pGraphics->AttachControl(new IVToggleControl(buttons.GetGridCell(0, 1, 4), kParamMultiOuts));
     pGraphics->AttachControl(new IVMeterControl<8>(buttons.GetGridCell(1, 1, 4, EDirection::Horizontal, 3), ""), kCtrlTagMeter);
+    pGraphics->AttachControl(new IVKnobControl(volumeContainer.GetGridCell(0, 1, 4), kParamGain));
     IVStyle style = DEFAULT_STYLE.WithRoundness(0.1f).WithFrameThickness(3.f);
     for (int i = 0; i < kNumDrums; i++)
     {
