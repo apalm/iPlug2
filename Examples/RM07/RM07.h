@@ -10,7 +10,8 @@ enum EParams
 {
   kParamGain = 0,
   kParamMultiOuts,
-  kNumParams
+  kParamMIDIMappingType,
+  kNumParams,
 };
 
 enum ECtrlTags

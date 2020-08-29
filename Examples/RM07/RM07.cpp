@@ -53,6 +53,7 @@ RM07::RM07(const InstanceInfo &info)
 {
   GetParam(kParamGain)->InitDouble("Gain", 100., 0., 100.0, 0.01, "%");
   GetParam(kParamMultiOuts)->InitBool("Multi-outs", false);
+  GetParam(kParamMIDIMappingType)->InitInt("MIDI Mapping Type", 0, 0, 1);
 #if IPLUG_EDITOR // http://bit.ly/2S64BDd
   mMakeGraphicsFunc = [&]() {
     return MakeGraphics(*this, PLUG_WIDTH, PLUG_HEIGHT, PLUG_FPS, 1.);
@@ -63,7 +64,7 @@ RM07::RM07(const InstanceInfo &info)
     pGraphics->AttachPanelBackground(COLOR_WHITE);
     pGraphics->EnableMouseOver(true);
     //    pGraphics->EnableMultiTouch(true);
-    //    pGraphics->ShowFPSDisplay(true);
+    pGraphics->ShowFPSDisplay(true);
     //    pGraphics->EnableLiveEdit(true);
     pGraphics->LoadFont("Roboto-Regular", ROBOTO_FN);
     IRECT b = pGraphics->GetBounds().GetPadded(-5);
@@ -74,11 +75,14 @@ RM07::RM07(const InstanceInfo &info)
     pGraphics->AttachControl(new IVToggleControl(buttons.GetGridCell(0, 1, 4), kParamMultiOuts));
     pGraphics->AttachControl(new IVMeterControl<8>(buttons.GetGridCell(1, 1, 4, EDirection::Horizontal, 3), ""), kCtrlTagMeter);
     pGraphics->AttachControl(new IVKnobControl(volumeContainer.GetGridCell(0, 1, 4), kParamGain));
+    pGraphics->AttachControl(new IVRadioButtonControl(volumeContainer.GetGridCell(1, 1, 4), kParamMIDIMappingType, {}));
     IVStyle style = DEFAULT_STYLE.WithRoundness(0.1f).WithFrameThickness(3.f);
     for (int i = 0; i < kNumDrums; i++)
     {
       IRECT cell = pads.GetGridCell(i, 2, 2);
-      pGraphics->AttachControl(new DrumPadControl(cell, style, 60 + i), i /* controlTag */);
+      std::vector<int> mapping = mDSP.GetMIDIMapping();
+      int midiNoteNumber = mapping[i];
+      pGraphics->AttachControl(new DrumPadControl(cell, style, midiNoteNumber), i);
     }
   };
 #endif
@@ -89,11 +93,11 @@ void RM07::OnMidiMsgUI(const IMidiMsg &msg)
 {
   if (GetUI() && msg.StatusMsg() == IMidiMsg::kNoteOn)
   {
-    int pitchClass = msg.NoteNumber() % 12;
-
-    if (pitchClass < kNumDrums)
+    int midiNoteNumber = msg.NoteNumber();
+    int padIndex = mDSP.GetPadIndex(midiNoteNumber);
+    if (padIndex != -1)
     {
-      DrumPadControl *pPad = dynamic_cast<DrumPadControl *>(GetUI()->GetControlWithTag(pitchClass));
+      DrumPadControl *pPad = dynamic_cast<DrumPadControl *>(GetUI()->GetControlWithTag(padIndex));
       pPad->SetSplashPoint(pPad->GetRECT().MW(), pPad->GetRECT().MH());
       pPad->TriggerAnimation();
     }
@@ -178,6 +182,8 @@ void RM07::OnParamChange(int paramIdx)
   case kParamMultiOuts:
     mDSP.SetMultiOut(GetParam(paramIdx)->Bool());
     break;
+  case kParamMIDIMappingType:
+    mDSP.SetMIDIMapping(GetParam(paramIdx)->Int());
   default:
     break;
   }

@@ -6,10 +6,14 @@
 
 static constexpr int kNumDrums = 4;
 static constexpr double kStartFreq = 300.;     //Hz
-static constexpr double kFreqDiff = 100.;      //Hz
+static constexpr double kFreqDiff = 150.;      //Hz
 static constexpr double kPitchEnvRange = 100.; //Hz
 static constexpr double kAmpDecayTime = 300;   //Ms
 static constexpr double kPitchDecayTime = 50.; //Ms
+
+// Track/pad to MIDI note number mapping
+std::vector<int> whiteKeyMIDINoteMapping{36, 38, 40, 41};
+std::vector<int> chromaticMIDINoteMapping{36, 37, 38, 39};
 
 using namespace iplug;
 
@@ -73,14 +77,17 @@ public:
       {
         IMidiMsg &msg = mMidiQueue.Peek();
         if (msg.mOffset > s)
+        {
           break;
+        }
 
         if (msg.StatusMsg() == IMidiMsg::kNoteOn && msg.Velocity())
         {
-          int pitchClass = msg.NoteNumber() % 12;
-
-          if (pitchClass < kNumDrums)
-            mDrums[pitchClass].Trigger(msg.Velocity() / 127.f);
+          int padIndex = GetPadIndex(msg.NoteNumber());
+          if (padIndex != -1)
+          {
+            mDrums[padIndex].Trigger(msg.Velocity() / 127.f);
+          }
         }
 
         mMidiQueue.Remove();
@@ -129,8 +136,35 @@ public:
     mMultiOut = multiOut;
   }
 
+  std::vector<int> GetMIDIMapping()
+  {
+    return mMIDIMapping;
+  }
+
+  int GetPadIndex(int midiNoteNumber)
+  {
+    std::vector<int>::iterator it;
+    it = std::find(mMIDIMapping.begin(), mMIDIMapping.end(), midiNoteNumber);
+    // Found MIDI note number
+    if (it != mMIDIMapping.end())
+    {
+      int index = it - mMIDIMapping.begin();
+      return index;
+    }
+    else
+    {
+      return -1;
+    }
+  }
+
+  void SetMIDIMapping(int midiMappingType)
+  {
+    mMIDIMapping = midiMappingType == 0 ? whiteKeyMIDINoteMapping : chromaticMIDINoteMapping;
+  }
+
 private:
   bool mMultiOut = false;
+  std::vector<int> mMIDIMapping;
   std::vector<DrumVoice> mDrums;
   IMidiQueue mMidiQueue;
 };
