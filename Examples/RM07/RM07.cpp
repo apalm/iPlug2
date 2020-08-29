@@ -3,6 +3,7 @@
 
 #if IPLUG_EDITOR
 #include "IControls.h"
+#include "TestDirBrowseControl.h"
 
 class DrumPadControl : public IControl, public IVectorBase
 {
@@ -83,6 +84,9 @@ RM07::RM07(const InstanceInfo &info)
     pGraphics->AttachControl(new IVMeterControl<kNumDrums * 2>(buttons.GetGridCell(1, 1, 4, EDirection::Horizontal, 3), ""), kCtrlTagMeter);
     pGraphics->AttachControl(new IVKnobControl(volumeContainer.GetGridCell(0, 1, 4), kParamGain));
     pGraphics->AttachControl(new IVRadioButtonControl(volumeContainer.GetGridCell(1, 1, 4), kParamMIDIMappingType, {}));
+    // char extension = '.wav';
+    // char pth = '~';
+    // pGraphics->AttachControl(new TestDirBrowseControl(volumeContainer.GetGridCell(2, 1, 4), &extension, &pth));
     IVStyle style = DEFAULT_STYLE.WithRoundness(0.1f).WithFrameThickness(3.f);
     int numOfPadRows = 2;
     for (int i = 0; i < kNumDrums; i++)
