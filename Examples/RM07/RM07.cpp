@@ -4,8 +4,7 @@
 #if IPLUG_EDITOR
 #include "IControls.h"
 
-class DrumPadControl : public IControl,
-                       public IVectorBase
+class DrumPadControl : public IControl, public IVectorBase
 {
 public:
   DrumPadControl(const IRECT &bounds, const IVStyle &style, int midiNoteNumber)
