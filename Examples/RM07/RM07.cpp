@@ -32,7 +32,7 @@ public:
     // if this class is instantiated with the MIDI note number, the note number
     // would be stale when the MIDI mapping is changed. It also allows this
     // class to not care about MIDI.
-    GetDelegate()->SendArbitraryMsgFromUI(kMessageNoteOn, kNoTag, sizeof(mIndex), &mIndex);
+    GetDelegate()->SendArbitraryMsgFromUI(kMessageDrumPadMouseDown, kNoTag, sizeof(mIndex), &mIndex);
   }
 
   void OnMouseUp(float x, float y, const IMouseMod &mod) override
@@ -40,7 +40,7 @@ public:
     // IMidiMsg msg;
     // msg.MakeNoteOffMsg(mMidiNoteNumber, 0);
     // GetDelegate()->SendMidiMsgFromUI(msg);
-    GetDelegate()->SendArbitraryMsgFromUI(kMessageNoteOff, kNoTag, sizeof(mIndex), &mIndex);
+    GetDelegate()->SendArbitraryMsgFromUI(kMessageDrumPadMouseUp, kNoTag, sizeof(mIndex), &mIndex);
   }
 
   void TriggerAnimation()
@@ -114,7 +114,7 @@ bool RM07::OnMessage(int messageTag, int controlTag, int dataSize, const void *p
 {
   if (GetUI())
   {
-    if (messageTag == kMessageNoteOn)
+    if (messageTag == kMessageDrumPadMouseDown)
     {
       const int padIndex = *static_cast<const int *>(pData);
       std::vector<int> midiMapping = mDSP.GetMIDIMapping();
@@ -123,7 +123,7 @@ bool RM07::OnMessage(int messageTag, int controlTag, int dataSize, const void *p
       msg.MakeNoteOnMsg(midiNoteNumber, 127, 0);
       SendMidiMsgFromUI(msg);
     }
-    else if (messageTag == kMessageNoteOff)
+    else if (messageTag == kMessageDrumPadMouseUp)
     {
       const int padIndex = *static_cast<const int *>(pData);
       std::vector<int> midiMapping = mDSP.GetMIDIMapping();

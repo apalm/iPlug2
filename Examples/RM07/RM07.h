@@ -30,8 +30,8 @@ enum ECtrlTags
 
 enum EMessageTags
 {
-  kMessageNoteOn = 0,
-  kMessageNoteOff
+  kMessageDrumPadMouseDown = 0,
+  kMessageDrumPadMouseUp
 };
 
 using namespace iplug;
