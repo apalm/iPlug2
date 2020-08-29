@@ -64,7 +64,7 @@ RM07::RM07(const InstanceInfo &info)
     pGraphics->AttachPanelBackground(COLOR_WHITE);
     pGraphics->EnableMouseOver(true);
     //    pGraphics->EnableMultiTouch(true);
-    pGraphics->ShowFPSDisplay(true);
+    // pGraphics->ShowFPSDisplay(true);
     //    pGraphics->EnableLiveEdit(true);
     pGraphics->LoadFont("Roboto-Regular", ROBOTO_FN);
     IRECT b = pGraphics->GetBounds().GetPadded(-5);
