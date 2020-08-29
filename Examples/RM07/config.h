@@ -17,7 +17,11 @@
 0-2 \
 0-2.2 \
 0-2.2.2 \
-0-2.2.2.2"
+0-2.2.2.2 \
+0-2.2.2.2.2 \
+0-2.2.2.2.2.2 \
+0-2.2.2.2.2.2.2 \
+0-2.2.2.2.2.2.2.2"
 
 #define PLUG_LATENCY 0
 #define PLUG_TYPE 1
@@ -26,7 +30,7 @@
 #define PLUG_DOES_MPE 0
 #define PLUG_DOES_STATE_CHUNKS 0
 #define PLUG_HAS_UI 1
-#define PLUG_WIDTH 635
+#define PLUG_WIDTH 700
 #define PLUG_HEIGHT 435
 #define PLUG_FPS 60
 #define PLUG_SHARED_RESOURCES 0

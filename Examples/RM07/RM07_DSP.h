@@ -4,16 +4,16 @@
 #include "ADSREnvelope.h"
 #include <vector>
 
-static constexpr int kNumDrums = 4;
+static constexpr int kNumDrums = 8;
 static constexpr double kStartFreq = 300.;     //Hz
-static constexpr double kFreqDiff = 150.;      //Hz
+static constexpr double kFreqDiff = 100.;      //Hz
 static constexpr double kPitchEnvRange = 100.; //Hz
 static constexpr double kAmpDecayTime = 300;   //Ms
 static constexpr double kPitchDecayTime = 50.; //Ms
 
 // Track/pad to MIDI note number mapping
-std::vector<int> whiteKeyMIDINoteMapping{36, 38, 40, 41};
-std::vector<int> chromaticMIDINoteMapping{36, 37, 38, 39};
+std::vector<int> whiteKeyMIDINoteMapping{36, 38, 40, 41, 43, 45, 47, 48};
+std::vector<int> chromaticMIDINoteMapping{36, 37, 38, 39, 40, 41, 42, 43};
 
 using namespace iplug;
 

@@ -27,3 +27,5 @@ https://github.com/Tezika/tsynth
 https://github.com/Lepidora/Comfort
 https://github.com/Lepidora/FMSU
 https://steinbergmedia.github.io/vst3_doc/vstinterfaces/index.html
+
+- debugger in XCode is useful

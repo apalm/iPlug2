@@ -7,8 +7,8 @@
 class DrumPadControl : public IControl, public IVectorBase
 {
 public:
-  DrumPadControl(const IRECT &bounds, const IVStyle &style, int midiNoteNumber)
-      : IControl(bounds), IVectorBase(style), mMidiNoteNumber(midiNoteNumber)
+  DrumPadControl(const IRECT &bounds, const IVStyle &style, int index)
+      : IControl(bounds), IVectorBase(style), mIndex(index)
   {
     mDblAsSingleClick = true;
     AttachIControl(this, "");
@@ -24,16 +24,23 @@ public:
   void OnMouseDown(float x, float y, const IMouseMod &mod) override
   {
     TriggerAnimation();
-    IMidiMsg msg;
-    msg.MakeNoteOnMsg(mMidiNoteNumber, 127, 0);
-    GetDelegate()->SendMidiMsgFromUI(msg);
+    // IMidiMsg msg;
+    // msg.MakeNoteOnMsg(mMidiNoteNumber, 127, 0);
+    // GetDelegate()->SendMidiMsgFromUI(msg);
+
+    // Send an arbitrary message instead of a MIDI note-on message, because
+    // if this class is instantiated with the MIDI note number, the note number
+    // would be stale when the MIDI mapping is changed. It also allows this
+    // class to not care about MIDI.
+    GetDelegate()->SendArbitraryMsgFromUI(kMessageNoteOn, kNoTag, sizeof(mIndex), &mIndex);
   }
 
   void OnMouseUp(float x, float y, const IMouseMod &mod) override
   {
-    IMidiMsg msg;
-    msg.MakeNoteOffMsg(mMidiNoteNumber, 0);
-    GetDelegate()->SendMidiMsgFromUI(msg);
+    // IMidiMsg msg;
+    // msg.MakeNoteOffMsg(mMidiNoteNumber, 0);
+    // GetDelegate()->SendMidiMsgFromUI(msg);
+    GetDelegate()->SendArbitraryMsgFromUI(kMessageNoteOff, kNoTag, sizeof(mIndex), &mIndex);
   }
 
   void TriggerAnimation()
@@ -44,7 +51,7 @@ public:
 
 private:
   bool mFlash = false;
-  int mMidiNoteNumber;
+  int mIndex;
 };
 #endif
 
@@ -73,16 +80,15 @@ RM07::RM07(const InstanceInfo &info)
     const IRECT pads = b.GetPadded(-5.f);
 
     pGraphics->AttachControl(new IVToggleControl(buttons.GetGridCell(0, 1, 4), kParamMultiOuts));
-    pGraphics->AttachControl(new IVMeterControl<8>(buttons.GetGridCell(1, 1, 4, EDirection::Horizontal, 3), ""), kCtrlTagMeter);
+    pGraphics->AttachControl(new IVMeterControl<kNumDrums * 2>(buttons.GetGridCell(1, 1, 4, EDirection::Horizontal, 3), ""), kCtrlTagMeter);
     pGraphics->AttachControl(new IVKnobControl(volumeContainer.GetGridCell(0, 1, 4), kParamGain));
     pGraphics->AttachControl(new IVRadioButtonControl(volumeContainer.GetGridCell(1, 1, 4), kParamMIDIMappingType, {}));
     IVStyle style = DEFAULT_STYLE.WithRoundness(0.1f).WithFrameThickness(3.f);
+    int numOfPadRows = 2;
     for (int i = 0; i < kNumDrums; i++)
     {
-      IRECT cell = pads.GetGridCell(i, 2, 2);
-      std::vector<int> mapping = mDSP.GetMIDIMapping();
-      int midiNoteNumber = mapping[i];
-      pGraphics->AttachControl(new DrumPadControl(cell, style, midiNoteNumber), i);
+      IRECT cell = pads.GetGridCell(i, numOfPadRows, kNumDrums / numOfPadRows);
+      pGraphics->AttachControl(new DrumPadControl(cell, style, i), i);
     }
   };
 #endif
@@ -103,6 +109,31 @@ void RM07::OnMidiMsgUI(const IMidiMsg &msg)
     }
   }
 }
+
+bool RM07::OnMessage(int messageTag, int controlTag, int dataSize, const void *pData)
+{
+  if (GetUI())
+  {
+    if (messageTag == kMessageNoteOn)
+    {
+      const int padIndex = *static_cast<const int *>(pData);
+      std::vector<int> midiMapping = mDSP.GetMIDIMapping();
+      int midiNoteNumber = midiMapping[padIndex];
+      IMidiMsg msg;
+      msg.MakeNoteOnMsg(midiNoteNumber, 127, 0);
+      SendMidiMsgFromUI(msg);
+    }
+    else if (messageTag == kMessageNoteOff)
+    {
+      const int padIndex = *static_cast<const int *>(pData);
+      std::vector<int> midiMapping = mDSP.GetMIDIMapping();
+      int midiNoteNumber = midiMapping[padIndex];
+      IMidiMsg msg;
+      msg.MakeNoteOffMsg(midiNoteNumber, 0);
+      SendMidiMsgFromUI(msg);
+    }
+  }
+}
 #endif
 
 #if IPLUG_DSP
@@ -110,14 +141,10 @@ void RM07::GetBusName(ERoute direction, int busIdx, int nBuses, WDL_String &str)
 {
   if (direction == ERoute::kOutput)
   {
-    if (busIdx == 0)
-      str.Set("Drum1");
-    else if (busIdx == 1)
-      str.Set("Drum2");
-    else if (busIdx == 2)
-      str.Set("Drum3");
-    else if (busIdx == 3)
-      str.Set("Drum4");
+    if (busIdx >= 0 && busIdx < kNumDrums)
+    {
+      str.Set(("Drum" + std::to_string(busIdx + 1)).c_str());
+    }
 
     return;
   }

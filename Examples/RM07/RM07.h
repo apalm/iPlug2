@@ -20,8 +20,18 @@ enum ECtrlTags
   kCtrlTagPad2,
   kCtrlTagPad3,
   kCtrlTagPad4,
+  kCtrlTagPad5,
+  kCtrlTagPad6,
+  kCtrlTagPad7,
+  kCtrlTagPad8,
   kCtrlTagMeter,
   kNumCtrlTags
+};
+
+enum EMessageTags
+{
+  kMessageNoteOn = 0,
+  kMessageNoteOff
 };
 
 using namespace iplug;
@@ -34,6 +44,7 @@ public:
 
 #if IPLUG_EDITOR // // http://bit.ly/2S64BDd
   void OnMidiMsgUI(const IMidiMsg &msg) override;
+  bool OnMessage(int messageTag, int controlTag, int dataSize, const void *pData) override;
 #endif
 
 #if IPLUG_DSP // http://bit.ly/2S64BDd
@@ -49,6 +60,6 @@ public:
 
 private:
   DrumSynthDSP mDSP;
-  IPeakSender<8> mSender;
+  IPeakSender<16> mSender;
 #endif
 };
