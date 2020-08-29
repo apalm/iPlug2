@@ -9,6 +9,7 @@
 - what about rests in songs?
 - what about inserting patterns in the middle of an existing song? wouldn't want to redo everything. see page 12 of LinnDrum manual for how they handle
 - what about deleting an existing pattern in the middle of an existing song?
+- with Sitala, I think each track (pad) is hardwired to an audio output. not sure if that's desirable?
 
 ## Goals
 
