@@ -1,9 +1,34 @@
 #include "RM07.h"
 #include "IPlug_include_in_plug_src.h"
 
+// #include "ICST_DSP_Library_WinMac_V1/Common.h"
+// #include "ICST_DSP_Library_WinMac_V1/AudioFile.h"
+// #include "ICST_DSP_Library_WinMac_V1/AudioFile.cpp"
+// #include "ICST_DSP_Library_WinMac_V1/BlkDsp.h"
+// #include "ICST_DSP_Library_WinMac_V1/BlkDsp.cpp"
+// #include "ICST_DSP_Library_WinMac_V1/AudioSynth.h"
+// #include "ICST_DSP_Library_WinMac_V1/AudioSynth.cpp"
+// using namespace icstdsp;
+#include "ICST_DSP_Library_WinMac_V1/Common.h"
+// #include "ICST_DSP_Library_WinMac_V1/AudioAnalysis.h"
+#include "ICST_DSP_Library_WinMac_V1/AudioFile.h"
+#include "ICST_DSP_Library_WinMac_V1/AudioFile.cpp"
+#include "ICST_DSP_Library_WinMac_V1/AudioSynth.h"
+#include "ICST_DSP_Library_WinMac_V1/AudioSynth.cpp"
+#include "ICST_DSP_Library_WinMac_V1/BlkDsp.h"
+#include "ICST_DSP_Library_WinMac_V1/BlkDsp.cpp"
+// #include "ICST_DSP_Library_WinMac_V1/Chart.h"
+// #include "ICST_DSP_Library_WinMac_V1/Neuro.h"
+#include "ICST_DSP_Library_WinMac_V1/SpecMath.h"
+#include "ICST_DSP_Library_WinMac_V1/SpecMath.cpp"
+#include "ICST_DSP_Library_WinMac_V1/fftoourad.cpp"
+#include "ICST_DSP_Library_WinMac_V1/fftoouraf.cpp"
+#include "ICST_DSP_Library_WinMac_V1/fftooura.h"
+using namespace icstdsp;
+
 #if IPLUG_EDITOR
 #include "IControls.h"
-#include "TestDirBrowseControl.h"
+// #include "TestDirBrowseControl.h"
 
 class DrumPadControl : public IControl, public IVectorBase
 {
@@ -84,9 +109,28 @@ RM07::RM07(const InstanceInfo &info)
     pGraphics->AttachControl(new IVMeterControl<kNumDrums * 2>(buttons.GetGridCell(1, 1, 4, EDirection::Horizontal, 3), ""), kCtrlTagMeter);
     pGraphics->AttachControl(new IVKnobControl(volumeContainer.GetGridCell(0, 1, 4), kParamGain));
     pGraphics->AttachControl(new IVRadioButtonControl(volumeContainer.GetGridCell(1, 1, 4), kParamMIDIMappingType, {}));
-    // char extension = '.wav';
-    // char pth = '~';
-    // pGraphics->AttachControl(new TestDirBrowseControl(volumeContainer.GetGridCell(2, 1, 4), &extension, &pth));
+
+    // char *extension = ".wav";
+    // char *pth = "~";
+    // pGraphics->AttachControl(new TestDirBrowseControl(volumeContainer.GetGridCell(2, 1, 4), extension, pth));
+
+    auto handleLoadSample = [pGraphics](IControl *pCaller) {
+      SplashClickActionFunc(pCaller);
+      icstdsp::AudioFile audioFile;
+      char *filename = "/Users/apalm/Dropbox/Audio/samples/6 Bit Deep/Analog Snares & Claps/01  EMT140 (1).wav";
+      if (audioFile.Load(filename) == 0)
+      {
+        float *audioData = audioFile.GetSafePt();
+        icstdsp::SampleOsc sampleOsc;
+        sampleOsc.PreComp(audioData, audioFile.GetSize());
+        // float *out;
+        int playbackState = sampleOsc.Update(audioData, audioData, audioFile.GetSize(), 1 / audioFile.GetSize(), 0, audioFile.GetSize());
+        //
+      }
+    };
+
+    pGraphics->AttachControl(new IVButtonControl(volumeContainer.GetGridCell(2, 1, 4), handleLoadSample));
+
     IVStyle style = DEFAULT_STYLE.WithRoundness(0.1f).WithFrameThickness(3.f);
     int numOfPadRows = 2;
     for (int i = 0; i < kNumDrums; i++)

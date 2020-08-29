@@ -101,7 +101,9 @@ public:
           outputs[channel][s] = 0.;
 
           if (mDrums[d].IsActive())
+          {
             outputs[channel][s] = mDrums[d].Process();
+          }
 
           outputs[channel + 1][s] = outputs[channel][s];
 
