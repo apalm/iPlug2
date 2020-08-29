@@ -4,7 +4,7 @@
 - increase number of pads
 - ADSR knobs
 - sample playback
-- white keys, chromatic midi mapping
+- white keys, chromatic midi mapping. index is track number. e.g chromatic: [30, 31, 32, ...], white: [30, 32, 34, ...]
 
 ## Notes
 
