@@ -6,6 +6,13 @@
 - sample playback
 - white keys, chromatic midi mapping. index is track number. e.g chromatic: [30, 31, 32, ...], white: [30, 32, 34, ...]
 
+## Goals
+
+- XML-based presets like Valhalla, Sitala
+- separate presets for songs, patterns, kits
+- no gigantic sample library - most people have a ton of samples
+- no effects - most people have a ton of third-party VSTs that they prefer
+
 ## Notes
 
 https://stackoverflow.com/questions/5016622/where-does-the-k-prefix-for-constants-come-from
