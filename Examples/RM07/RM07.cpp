@@ -63,7 +63,7 @@ RM07::RM07(const InstanceInfo &info)
   GetParam(kParamMIDIMappingType)->InitInt("MIDI Mapping Type", 0, 0, 1);
 #if IPLUG_EDITOR // http://bit.ly/2S64BDd
   mMakeGraphicsFunc = [&]() {
-    return MakeGraphics(*this, PLUG_WIDTH, PLUG_HEIGHT, PLUG_FPS, 1.);
+    return MakeGraphics(*this, PLUG_WIDTH, PLUG_HEIGHT, PLUG_FPS, GetScaleForScreen(PLUG_HEIGHT));
   };
 
   mLayoutFunc = [&](IGraphics *pGraphics) {
