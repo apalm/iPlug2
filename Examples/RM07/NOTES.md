@@ -6,6 +6,7 @@
 - sample playback
 - white keys, chromatic midi mapping. index is track number. e.g chromatic: [30, 31, 32, ...], white: [30, 32, 34, ...]
 - optional name for patterns? e.g. verse, chorus
+- what about rests in songs?
 
 ## Goals
 
