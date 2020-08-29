@@ -4,6 +4,7 @@
 - increase number of pads
 - ADSR knobs
 - sample playback
+- white keys, chromatic midi mapping
 
 ## Notes
 
