@@ -28,5 +28,35 @@ https://github.com/Lepidora/Comfort
 https://github.com/Lepidora/FMSU
 https://steinbergmedia.github.io/vst3_doc/vstinterfaces/index.html
 https://www.zhdk.ch/en/research/icst/software-downloads-5379/downloads-dsp-library-5384
+https://github.com/theaudioprogrammer/helloSampler
+https://docs.juce.com/master/structADSR_1_1Parameters.html
+https://docs.juce.com/master/classDecibels.html
+https://docs.juce.com/master/group__juce__audio__basics-audio__play__head.html
+https://docs.juce.com/master/group__juce__audio__basics-midi.html
+https://docs.juce.com/master/classMidiFile.html
+https://docs.juce.com/master/classMidiMessageSequence.html
+https://docs.juce.com/master/classSoundPlayer.html
+https://docs.juce.com/master/classSamplerSound.html
+https://docs.juce.com/master/classSamplerVoice.html \*\*
+https://docs.juce.com/master/classSynthesiser.html \*\*
+https://docs.juce.com/master/structDrumPadGridProgram.html
+https://docs.juce.com/master/classXmlElement.html
+https://docs.juce.com/master/classJSON.html
+https://docs.juce.com/master/classUndoManager.html
+https://docs.juce.com/master/classHighResolutionTimer.html
+https://docs.juce.com/master/classButton.html
+https://docs.juce.com/master/classComboBox.html
+https://docs.juce.com/master/classComponentDragger.html
+https://docs.juce.com/master/classDirectoryContentsList.html
+https://docs.juce.com/master/classFileDragAndDropTarget.html \*\*
+https://docs.juce.com/master/classDragAndDropContainer.html
+https://docs.juce.com/master/classDragAndDropTarget.html
+https://docs.juce.com/master/classFileBrowserComponent.html
+https://docs.juce.com/master/classGrid.html
+https://docs.juce.com/master/classPreferencesPanel.html
+https://docs.juce.com/master/classResizableCornerComponent.html
+https://docs.juce.com/master/classSlider.html
+https://docs.juce.com/master/classTabbedComponent.html
+https://docs.juce.com/master/classAudioThumbnail.html
 
 - debugger in XCode is useful
